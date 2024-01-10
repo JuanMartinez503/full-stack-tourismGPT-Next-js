@@ -40,7 +40,12 @@ const Chat = () => {
               key={index}
             >
               <span className="mr-4">{avatar}</span>
-              <p className="max-w-3xl">{content}</p>
+              <p className="max-w-3xl">{isPending? 
+              (
+                <span className=" loading"></span>
+              ):(
+                <p>{content}</p>
+              )}</p>
             </div>
           );
         })}
