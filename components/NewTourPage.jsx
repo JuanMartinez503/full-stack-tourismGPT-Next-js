@@ -9,25 +9,28 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 const NewTourPage = () => {
-    const {mutate, isPending, data: tour}= useMutation({
-        mutationFn:async (destination)=>{
-            const newTour = await generateTourResponse(destination)
-            if(newTour){
-                return newTour
-
-            }
-            toast.error('No matching city found...')
-            return null
-        }
-    })
+  const {
+    mutate,
+    isPending,
+    data: tour,
+  } = useMutation({
+    mutationFn: async (destination) => {
+      const newTour = await generateTourResponse(destination);
+      if (newTour) {
+        return newTour;
+      }
+      toast.error("No matching city found...");
+      return null;
+    },
+  });
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const destination = Object.fromEntries(formData.entries());
-    mutate(destination)
+    mutate(destination);
   };
-  if (isPending){
-    return <span className="loading loading-lg"></span>
+  if (isPending) {
+    return <span className="loading loading-lg"></span>;
   }
   return (
     <>
@@ -48,13 +51,13 @@ const NewTourPage = () => {
             name="country"
             required
           />
-          <button className="btn btn-primary join-item " type="submit">
+          <button className="btn btn-primary join-item " type="submit" disabled={isPending}>
             Generate
           </button>
         </div>
       </form>
-      <div>
-        {tour ? <TourInfo tour={tour} /> :null}
+      <div className="mt-16">
+        <div className="mt-16">{tour ? <TourInfo tour={tour} /> : null}</div>
       </div>
     </>
   );
