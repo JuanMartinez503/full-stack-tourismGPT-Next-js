@@ -1,76 +1,87 @@
-"use client";
+'use client';
 
-import { generateChatResponse } from "@/utils/action";
-import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
-import toast from "react-hot-toast";
-
+import {
+  generateChatResponse,
+  fetchUserTokens,
+  subtractTokens,
+} from '@/utils/action';
+import { useMutation } from '@tanstack/react-query';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { useAuth } from '@clerk/nextjs';
 const Chat = () => {
-  const [text, setText] = useState("");
-  const [messages, setMessages] = useState([]);
+  const { userId } = useAuth();
 
+  const [text, setText] = useState('');
+  const [messages, setMessages] = useState([]);
   const { mutate, isPending } = useMutation({
-    mutationFn: (query) => generateChatResponse([...messages, query]),
-    onSuccess: (data) => {
-      if (!data) {
-        toast.error("Something went wrong...");
+    mutationFn: async (query) => {
+      const currentTokens = await fetchUserTokens(userId);
+
+      if (currentTokens < 100) {
+        toast.error('Token balance too low....');
         return;
       }
-      setMessages((prev) => [...prev, data]);
+
+      const response = await generateChatResponse([...messages, query]);
+
+      if (!response) {
+        toast.error('Something went wrong...');
+        return;
+      }
+      setMessages((prev) => [...prev, response.message]);
+      const newTokens = await subtractTokens(userId, response.tokens);
+      toast.success(`${newTokens} tokens remaining...`);
     },
   });
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    const query = { role: "user", content: text };
+    const query = { role: 'user', content: text };
     mutate(query);
     setMessages((prev) => [...prev, query]);
-    setText("");
+    setText('');
   };
-  console.log(messages);
+
   return (
-    <div className=" min-h-[calc(100vh-6rem)] grid grid-rows-[1fr,auto] ">
+    <div className='min-h-[calc(100vh-6rem)] grid grid-rows-[1fr,auto]'>
       <div>
+        <h2 className="mb-4 text-primary text-xl text-center font-bold ">Tourism GPT: 
+I help you by providing information and recommendations on amazing places to visit, assisting with travel planning, and answering any questions you may have as a tourist.</h2>
         {messages.map(({ role, content }, index) => {
-          const avatar = role === "user" ? "👤" : "🤖";
-          const bcg = role === "user" ? "bg-base-200 " : "bg-base-100";
+          const avatar = role == 'user' ? '👤' : '🤖';
+          const bcg = role === 'user' ? 'bg-base-200' : 'bg-base-100';
           return (
             <div
-              className={`${bcg} flex py-6 -mx-8 px-8 text-xl leading-loose border-b border-base-300`}
               key={index}
+              className={`${bcg} flex py-6 -mx-8 px-8 text-xl leading-loose border-b border-base-300`}
             >
-              <span className="mr-4">{avatar}</span>
-              <p className="max-w-3xl">{isPending? 
-              (
-                <span className=" loading"></span>
-              ):(
-                <p>{content}</p>
-              )}</p>
+              <span className='mr-4'>{avatar}</span>
+              <p className='max-w-3xl'>{content}</p>
             </div>
           );
         })}
+        {isPending ? <span className='loading'></span> : null}
       </div>
-      <form onSubmit={handleSubmit} className=" max-w-4xl pt-12">
-        <div className="join w-full">
+      <form onSubmit={handleSubmit} className='max-w-4xl pt-12'>
+        <div className='join w-full'>
           <input
-            type="text"
-            className="input join-item w-full input-bordered"
-            required
-            placeholder="Ask Question to AI"
+            type='text'
+            placeholder='Message Tourism GPT'
+            className='input input-bordered join-item w-full'
             value={text}
+            required
             onChange={(e) => setText(e.target.value)}
           />
           <button
-            className="btn btn-primary join-item"
+            className='btn btn-primary join-item'
+            type='submit'
             disabled={isPending}
-            type="submit"
           >
-            {isPending ? "Please Wait" : "Ask Question"}
+            {isPending ? 'please wait...' : 'ask question'}
           </button>
         </div>
       </form>
     </div>
   );
 };
-
 export default Chat;

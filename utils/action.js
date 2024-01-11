@@ -1,6 +1,7 @@
 'use server'
 import OpenAI from "openai"
 import prisma from "./db"
+import { revalidatePath } from "next/cache"
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
@@ -10,13 +11,14 @@ export const generateChatResponse = async (chatMessages)=>{
     try {
         const response = await openai.chat.completions.create({
             messages:[
-                {role:'system', content:'you are a helpful assistant'},
+                {role:'system', content:'you are a helpful tourist assistant who is knowledgeable in amazing places to visit'},
                 ...chatMessages
             ],
             model:'gpt-3.5-turbo',
             temperature:0,
+            max_tokens:100
            })
-           return response.choices[0].message
+           return {message:response.choices[0].message, tokens:response.usage.total_tokens}
            
         
     } catch (error) {
@@ -35,7 +37,7 @@ export const generateTourResponse = async ({ city, country }) => {
       "country": "${country}",
       "title": "title of the tour",
       "description": "short description of the city and tour",
-      "stops": ["short paragraph on the stop 1 ", "short paragraph on the stop 2","short paragraph on the stop 3"]
+      "stops": ["stop name","stop name","stop name"]
     }
   }
   "stops" property should include only three stops.
@@ -57,7 +59,7 @@ export const generateTourResponse = async ({ city, country }) => {
         return null;
       }
   
-      return tourData.tour;
+      return {tour:tourData.tour, tokens:response.usage.total_tokens}
     } catch (error) {
       console.log(error);
       return null;
@@ -117,4 +119,41 @@ export const getSingleTour = async (id)=>{
             id,
         }
     })
+}
+export const fetchUserTokens = async (clerkId)=>{
+    const result = await prisma.token.findUnique({
+        where:{
+            clerkId
+        }
+    })
+    return result?.tokens;
+}
+export const generateUserTokens= async (clerkId)=>{
+    const result = await prisma.token.create({
+        data:{
+            clerkId,
+        }
+    })
+    return result?.tokens
+}
+export const fetchOrGenerateTokens = async (clerkId)=>{
+    const result = await fetchUserTokens(clerkId)
+    if(result){
+        return result.tokens
+    }
+    return (await generateUserTokens(clerkId).tokens)
+}
+export const subtractTokens = async (clerkId, tokens)=>{
+    const result = await prisma.token.update({
+        where:{
+            clerkId,
+        },
+        data:{
+            tokens:{
+                decrement:tokens
+            }
+        }
+    })
+    revalidatePath('/profile')
+    return result.tokens
 }
