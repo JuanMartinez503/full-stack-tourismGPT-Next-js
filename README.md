@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+# Tourism GPT
 
-First, run the development server:
+Tourism GPT is an innovative application designed to enhance your language experience by incorporating the power of OpenAI's cutting-edge language model. Whether you're looking to elevate your conversations, create compelling content, or explore the vast world of tourism, Tourism GPT has you covered. This is a full stack application that uses Next.js framework.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. **Intelligent Conversations**
+   Engage in intelligent and natural conversations with Tourism GPT. Benefit from its advanced language processing capabilities, making interactions seamless and enriching.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+2. **Content Crafting**
+   Effortlessly craft compelling content for your tourism ventures. Tourism GPT's linguistic prowess assists you in generating captivating narratives, descriptions, and places to visit at your destination. 
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+3. **Explore the World**
+   Take a virtual journey with Tourism GPT as your AI companion. Receive personalized recommendations, travel insights, and information about exciting destinations, ensuring a delightful exploration experience.
 
-## Learn More
+## Technology Stack
 
-To learn more about Next.js, take a look at the following resources:
+Tourism GPT leverages a robust technology stack to deliver a sophisticated and user-friendly application:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Prisma:** Utilized for efficient database management, ensuring data is organized and accessible for seamless user experiences.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- **Clerk:** Employs the power of Clerk for authentication, securing your interactions and ensuring that only authorized users have access.
 
-## Deploy on Vercel
+- **OpenAI API:** Integrates OpenAI's language model to provide advanced natural language processing capabilities, enhancing the quality of conversations and content creation.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Unsplash API:** Enriches the user experience by incorporating high-quality images from Unsplash, adding visual appeal to the application.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- **Tailwind CSS with Daisy UI:** Creates a visually stunning frontend with the help of Tailwind CSS and Daisy UI, ensuring a responsive and aesthetically pleasing design.
+
+- **Dark and Light Theme Modes:** Tailors the user experience with theme modes, allowing users to customize the application based on their preferences.
+## Screenshot 
+<img width="1329" alt="Screenshot 2024-01-11 at 2 30 06 PM" src="https://github.com/JuanMartinez503/full-stack-tourismgpt-next-js/assets/116415860/f9e40512-f478-46cc-85d0-1013511ea400">
