@@ -6,9 +6,9 @@ import Providers from './providers';
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'GPT Tourism',
+  title: 'Tourism GPT',
   description:
-    'GPT Tourism: Your AI language companion. Powered by OpenAI, it enhances your conversations, content creation, and more!',
+    'Tourism GPT: Your AI language companion. Powered by OpenAI, it enhances your conversations, content creation, and more!',
 };
 
 export default function RootLayout({ children }) {
